@@ -28,11 +28,9 @@ Et enkelt wiki-system. Fokuset i prosjektet er å lage selve systemet og struktu
 
 IM-Wiki/
 
-- kode/
 - media/
-- skisser/
-- dokumentasjon/
-- prosjektinfo/
+- static/
+- templates/
 
 ---
 ## Funksjoner
@@ -42,3 +40,4 @@ IM-Wiki/
 - Admin dashboard
 - Opprette nye wiki-sider
 - Vise wiki-sider
+- Elev-visning
