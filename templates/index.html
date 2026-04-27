@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IM Wiki</title>
+  <link rel="icon" type="image/x-icon" l\="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<header id="topbar">
+  <a class="tb-logo" href="#" onclick="return false">
+    <div class="tb-logo-mark">IM</div>
+    <span class="tb-logo-text">wiki<em>://</em>im</span>
+  </a>
+  <nav class="tb-nav">
+    <a href="#" onclick="showStudentView(); return false">Elev-visning</a>
+    <a href="#" onclick="state.isAdmin && showAdmin(); return false">Admin</a>
+  </nav>
+  <div class="tb-right" id="tb-right"></div>
+</header>
+
+<div id="view-login">
+  <div class="login-wrap">
+    <div class="login-header">
+      <div class="login-logo-big">IM</div>
+      <div class="login-title">Admin innlogging</div>
+      <div class="login-sub">// informasjonsteknologi og medieproduksjon</div>
+    </div>
+    <div class="login-body">
+      <div class="login-error" id="login-error">Feil brukernavn eller passord</div>
+      <div class="field">
+        <label>Brukernavn</label>
+        <input type="text" id="login-user" placeholder="brukernavn" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>Passord</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <div class="login-hint">Logg inn: admin / im2026</div>
+    </div>
+    <div class="login-footer">
+      <button class="btn btn-accent" onclick="doLogin()">Logg inn &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div id="view-admin" style="display:none; flex-direction:column;">
+  <div id="admin-strip">
+    <span class="badge badge-amber">Admin</span>
+    <span class="strip-title">Logget inn som <span id="strip-username">—</span></span>
+    <div class="strip-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showStudentView()">Elev-visning ↗</button>
+    </div>
+  </div>
+  <div id="app">
+    <aside id="admin-sidebar">
+      <div class="sb-section">
+        <div class="sb-label">Navigasjon</div>
+        <a class="sb-item active" data-panel="dashboard" onclick="switchPanel('dashboard')">
+          <span class="sb-dot"></span> Dashboard
+        </a>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages')">
+          <span class="sb-dot"></span> Wiki-sider
+          <span class="sb-count" id="sb-count-alle">0</span>
+        </a>
+        <a class="sb-item" data-panel="users" onclick="switchPanel('users')">
+          <span class="sb-dot"></span> Brukere
+        </a>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Kategorier</div>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages'); filterPagesPanel('Programmering')">
+          <span class="sb-dot" style="background:var(--accent)"></span> Programmering
+          <span class="sb-count" id="sb-count-programmering">0</span>
+        </a>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages'); filterPagesPanel('Nettverk')">
+          <span class="sb-dot" style="background:var(--green)"></span> Nettverk
+          <span class="sb-count" id="sb-count-nettverk">0</span>
+        </a>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages'); filterPagesPanel('Media')">
+          <span class="sb-dot" style="background:#ff4da6"></span> Media
+          <span class="sb-count" id="sb-count-media">0</span>
+        </a>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages'); filterPagesPanel('Design')">
+          <span class="sb-dot" style="background:var(--amber)"></span> Design
+          <span class="sb-count" id="sb-count-design">0</span>
+        </a>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages'); filterPagesPanel('Database')">
+          <span class="sb-dot" style="background:var(--purple)"></span> Database
+          <span class="sb-count" id="sb-count-database">0</span>
+        </a>
+        <a class="sb-item" data-panel="pages" onclick="switchPanel('pages'); filterPagesPanel('Annet')">
+          <span class="sb-dot" style="background:var(--text3)"></span> Annet
+          <span class="sb-count" id="sb-count-annet">0</span>
+        </a>
+      </div>
+    </aside>
+    <div id="main-area">
+      <div id="panel-dashboard" class="admin-panel">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Dashboard</div>
+            <div class="panel-sub">// oversikt over wiki-aktivitet</div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:var(--accent-dim2)">◈</div>
+              <div><div class="stat-val" id="dash-stat-total">0</div><div class="stat-lbl">totale sider</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:var(--green-dim)">⌘</div>
+              <div><div class="stat-val" id="dash-stat-cats">6</div><div class="stat-lbl">kategorier</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:var(--amber-dim)">◉</div>
+              <div><div class="stat-val" id="dash-stat-new">0</div><div class="stat-lbl">siste 7 dager</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:var(--purple-dim)">⊞</div>
+              <div><div class="stat-val" id="dash-stat-users">0</div><div class="stat-lbl">administratorer</div></div>
+            </div>
+          </div>
+          <div class="section-label">Aktivitetslogg</div>
+          <div class="activity-list" id="activity-feed">
+            <div class="empty-state">
+              <div class="empty-icon">◌</div>
+              <div class="empty-title">// ingen aktivitet ennå</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-pages" class="admin-panel" style="display:none">
+        <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div id="pages-cat-filter" style="display:flex;gap:6px;flex:1;flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-sm filter-btn active-filter" data-cat="alle" onclick="filterPagesPanel('alle')">Alle</button>
+            <button class="btn btn-ghost btn-sm filter-btn" data-cat="Programmering" onclick="filterPagesPanel('Programmering')">Programmering</button>
+            <button class="btn btn-ghost btn-sm filter-btn" data-cat="Nettverk" onclick="filterPagesPanel('Nettverk')">Nettverk</button>
+            <button class="btn btn-ghost btn-sm filter-btn" data-cat="Media" onclick="filterPagesPanel('Media')">Media</button>
+            <button class="btn btn-ghost btn-sm filter-btn" data-cat="Design" onclick="filterPagesPanel('Design')">Design</button>
+            <button class="btn btn-ghost btn-sm filter-btn" data-cat="Database" onclick="filterPagesPanel('Database')">Database</button>
+            <button class="btn btn-ghost btn-sm filter-btn" data-cat="Annet" onclick="filterPagesPanel('Annet')">Annet</button>
+          </div>
+          <button class="btn btn-accent" onclick="openCreate()">+ Ny side</button>
+        </div>
+        <div class="panel">
+          <table class="pages-table">
+            <thead><tr>
+              <th>Tittel</th><th>Kategori</th><th>Forfatter</th>
+              <th>Dato</th><th>Status</th><th>Handlinger</th>
+            </tr></thead>
+            <tbody id="pages-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="panel-users" class="admin-panel" style="display:none">
+        <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;justify-content:flex-end;">
+          <button class="btn btn-accent" onclick="openUserModal()">+ Ny bruker</button>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Brukere</div>
+            <div class="panel-sub">// administrer lærere og administratorer</div>
+          </div>
+          <div class="user-grid" id="users-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-student" style="display:none;">
+  <div class="student-hero">
+    <h1>IM <em>Wiki</em></h1>
+    <div class="hero-sub">// informasjonsteknologi og medieproduksjon</div>
+    <div class="search-bar-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input-student" placeholder="bare søk buddy..." />
+    </div>
+  </div>
+  <div class="student-body">
+    <aside class="student-sidebar">
+      <div class="sb-section">
+        <div class="sb-label">Kategorier</div>
+        <div id="student-sidebar-links"></div>
+      </div>
+    </aside>
+    <div class="student-content">
+      <div class="section-label" id="student-cat-title">Alle sider</div>
+      <div class="page-cards" id="student-page-grid"></div>
+      <div id="student-article-view" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-create" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title-text">// ny_side.md</span>
+      <button class="modal-close" onclick="closeCreate()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fields-row">
+        <div class="field">
+          <label>Sidetittel *</label>
+          <input type="text" id="cp-title" placeholder="f.eks. TCP/IP protokoller" />
+        </div>
+        <div class="field">
+          <label>URL-slug</label>
+          <input type="text" id="cp-slug" placeholder="tcp-ip-protokoller" />
+          <span class="hint">Genereres automatisk fra tittel</span>
+        </div>
+      </div>
+      <div class="fields-row">
+        <div class="field">
+          <label>Kategori</label>
+          <select id="cp-cat">
+            <option value="Programmering">Programmering</option>
+            <option value="Nettverk">Nettverk</option>
+            <option value="Media">Media</option>
+            <option value="Design">Design</option>
+            <option value="Database">Database</option>
+            <option value="Annet">Annet</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tags (kommaseparert)</label>
+          <input type="text" id="cp-tags" placeholder="nettverk, protokoll, IT" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Innhold (Markdown) *</label>
+        <div class="editor-wrap">
+          <div class="editor-toolbar">
+            <button onclick="insertMd('## ', '')">H2</button>
+            <button onclick="insertMd('### ', '')">H3</button>
+            <div class="sep"></div>
+            <button onclick="insertMd('**', '**')"><b>B</b></button>
+            <button onclick="insertMd('*', '*')"><i>I</i></button>
+            <button onclick="insertMd('`', '`')">code</button>
+            <div class="sep"></div>
+            <button onclick="insertMd('\n```\n', '\n```\n')">block</button>
+            <button onclick="insertMd('- ', '')">liste</button>
+            <div class="sep"></div>
+            <button id="btn-preview" onclick="togglePreview()">Forhåndsvisning</button>
+          </div>
+          <textarea id="cp-content" placeholder="## Introduksjon&#10;Skriv innholdet ditt her..."></textarea>
+        </div>
+        <div class="preview-box" id="preview-box">
+          <div class="preview-content" id="preview-content"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="checkbox" id="cp-published" style="width:16px;height:16px;accent-color:var(--green)" />
+        <label for="cp-published" style="font-family:var(--mono);font-size:11px;color:var(--text2);cursor:pointer">
+          Publiser siden umiddelbart (synlig for elever)
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="modal-footer-left">* Tittel og innhold er påkrevd</span>
+      <div class="modal-footer-right">
+        <button class="btn btn-ghost" onclick="closeCreate()">Avbryt</button>
+        <button class="btn btn-green" onclick="savePage()">Lagre side →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-user" class="modal-overlay">
+  <div class="modal-box" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">// ny_bruker.sql</span>
+      <button class="modal-close" onclick="closeUserModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Fullt navn</label>
+        <input type="text" id="nu-name" placeholder="Ola Nordmann" />
+      </div>
+      <div class="fields-row">
+        <div class="field">
+          <label>Brukernavn</label>
+          <input type="text" id="nu-user" placeholder="olanordmann" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Passord</label>
+          <input type="password" id="nu-pass" placeholder="••••••••" autocomplete="new-password" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Rolle</label>
+        <select id="nu-role">
+          <option value="Lærer">Lærer</option>
+          <option value="Superadmin">Superadmin</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="modal-footer-left">Passordet lagres i klartekst her (demo)</span>
+      <div class="modal-footer-right">
+        <button class="btn btn-ghost" onclick="closeUserModal()">Avbryt</button>
+        <button class="btn btn-green" onclick="saveUser()">Opprett bruker →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-confirm" class="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Bekreft sletting</div>
+    <div class="confirm-msg" id="confirm-msg"></div>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost" onclick="cancelConfirm()">Avbryt</button>
+      <button class="btn btn-red" onclick="doConfirm()">Slett</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/static/main.js"></script>
+</body>
+</html>
