@@ -178,6 +178,17 @@
 
 <div id="toast"></div>
 
+<table>
+  <tr>
+    <th>users</th>
+  </tr>
+  {% for user in users %}
+  <tr>
+    <td>{{ user }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
 <script src="/static/main.js"></script>
 </body>
 </html>

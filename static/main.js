@@ -67,7 +67,7 @@ function doLogin() {
     document.getElementById('login-pass').focus();
   }
 }
-
+/* --LOGOUT -- */
 function doLogout() {
   state.isAdmin = false;
   state.currentUser = null;
