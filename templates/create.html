@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Create account</title>
 </head>
 <body>
-    <h1>Logg inn</h1>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <form action="/login" method="post">
+    <h1>Opprett konto</h1>
+    <form action="/create" method="post">
+        <label for="name">Navn:</label><br>
+        <input type="text" id="name" name="name" required><br>
         <label for="username">Brukernavn:</label><br>
         <input type="text" id="username" name="username" required><br>
         <label for="password">Passord:</label><br>
         <input type="password" id="password" name="password" required><br><br>
-        <input type="submit" value="Logg inn">
+        <input type="submit" value="Opprett konto">
     </form>
-    <p>Har du ikke konto? <a href="/create.html">Opprett konto her</a></p>
 </body>
 </html>

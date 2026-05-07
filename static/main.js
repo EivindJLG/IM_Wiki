@@ -12,7 +12,7 @@ const state = {
   activeCat: 'alle',
 };
 
-/* ── INIT ── */
+/* ── INITIALIZER SIDEN ── */
 document.addEventListener('DOMContentLoaded', () => {
   showLogin();
   document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('modal-confirm').addEventListener('click', e => { if (e.target.id === 'modal-confirm') cancelConfirm(); });
 });
 
-/* ── VIEWS ── */
+/* ── DISPLAY FUNKSJONER ── */
 function showLogin() {
   document.getElementById('view-login').style.display = '';
   document.getElementById('view-admin').style.display = 'none';
@@ -29,7 +29,7 @@ function showLogin() {
   document.getElementById('tb-right').innerHTML = `<button onclick="showLogin()">Logg inn</button>`;
   setTimeout(() => document.getElementById('login-user').focus(), 50);
 }
-
+/* ── ADMIN SIDEN ── */
 function showAdmin() {
   document.getElementById('view-login').style.display = 'none';
   document.getElementById('view-admin').style.display = 'block';
@@ -38,7 +38,7 @@ function showAdmin() {
   document.getElementById('tb-right').innerHTML = `<button onclick="doLogout()">Logg ut</button>`;
   switchPanel('dashboard');
 }
-
+/* ── STUDENT SIDEN ── */
 function showStudentView() {
   document.getElementById('view-login').style.display = 'none';
   document.getElementById('view-admin').style.display = 'none';
@@ -48,7 +48,7 @@ function showStudentView() {
   showCat('alle');
 }
 
-/* ── AUTH ── */
+/* ── LOGIN FUNKSJON── */
 function doLogin() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;

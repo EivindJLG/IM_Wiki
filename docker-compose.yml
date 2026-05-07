@@ -1,22 +1,32 @@
 version: '3.8'
 
 services:
-  wiki-app:
+  web:
     build: .
     ports:
       - "6767:6767"
-    environment:
-      - DATABASE_HOST=<YOUR_PI_IP_ADDRESS>
-      - DATABASE_PORT=3306
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=your_password
-      - DATABASE_NAME=your_database_name
     volumes:
       - ./static:/app/static
       - ./templates:/app/templates
-    networks:
-      - wiki-network
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
 
-networks:
-  wiki-network:
-    driver: bridge
+  db:
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mariadb
+
+volumes:
+  db_data:
